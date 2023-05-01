@@ -17,11 +17,11 @@ app.use(require("./router/auth"));
 
 //2nd step
 const PORT = process.env.PORT || 5000;
-// app.use(express.static());
-// app.use(express.static(path.join(__dirname, "./FrontEnd/build")));
-// app.get("*", function (req, res) {
-//   res.sendFile(path.join(__dirname, "./FrontEnd/build/index.html"));
-// });
+app.use(express.static());
+app.use(express.static(path.join(__dirname, "./FrontEnd/build")));
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "./FrontEnd/build/index.html"));
+});
 // //3rd step
 
 app.listen(PORT, () => {
