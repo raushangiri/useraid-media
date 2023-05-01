@@ -1,0 +1,117 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+a {
+  cursor: pointer;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  color: inherit !important;
+}
+a:hover {
+  color: inherit;
+}
+a:active {
+  color: inherit;
+}
+
+/* Small devices (sm) */
+@media (min-width: 250px) {
+  /* CSS styles here */
+}
+
+/* Medium devices (md) */
+@media (min-width: 768px) {
+  /* CSS styles here */
+}
+
+/* Large devices (lg) */
+@media (min-width: 992px) {
+  /* CSS styles here */
+}
+
+/* Extra large devices (xl) */
+@media (min-width: 1200px) {
+  /* CSS styles here */
+}
+
+/* sign in css ================================================= */
+.background {
+  background-color: #181323;
+  min-height: 85vh;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-box {
+  background-color: silver;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  margin-top: 0;
+}
+
+/* ==Landing Pages CSS ========================================================== */
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

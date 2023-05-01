@@ -1,0 +1,126 @@
+/* Small devices (sm) */
+@media (min-width: 250px) {
+  .SidebarVisible {
+    left: -250px;
+  }
+  .SidebarHide {
+    left: 0px;
+  }
+}
+
+/* Medium devices (md) */
+@media (min-width: 768px) {
+  .SidebarVisible {
+    left: 0;
+  }
+  .SidebarHide {
+    left: -210px;
+  }
+  .sidebarBTN {
+    display: none;
+  }
+}
+
+/* Large devices (lg) */
+@media (min-width: 992px) {
+  .SidebarVisible {
+    left: 0;
+  }
+  .SidebarHide {
+    left: -210px;
+  }
+  .sidebarBTN {
+    display: none;
+  }
+}
+
+/* Extra large devices (xl) */
+@media (min-width: 1200px) {
+  .SidebarVisible {
+    left: 0;
+  }
+  .SidebarHide {
+    left: -210px;
+  }
+}
+
+.sidebarContainer {
+  width: 280px;
+  min-height: 100%;
+  max-width: 100%;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  padding-top: 30px;
+  transition: all 0.3s ease-in-out;
+  z-index: 11;
+}
+
+.sidebar {
+  color: azure;
+  width: 250px;
+  height: 100%;
+  padding-right: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding-top: 30px;
+  transition: all 0.3s ease-in-out;
+  font-size: 3rem !important;
+}
+
+.sidebarBTN {
+  position: absolute;
+  left: 240px;
+  top: 0;
+  width: 50px;
+  z-index: 10;
+}
+
+.sidebar .bi {
+  margin-right: 10px;
+}
+
+.menu-item {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.sub-menu {
+  display: none;
+  transition: all 0.3s ease-in-out;
+  font-size: 2rem !important;
+}
+.sidebar > ul > li,
+.sidebar > ul > li > ul > li {
+  list-style: none;
+  margin-left: -30px;
+  padding: 0;
+}
+.sidebar > ul > li > ul > li {
+  margin-left: -5px;
+}
+.sidebar a,
+.sidebar a li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.3s ease-in-out;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 30px;
+  display: block;
+}
+.sidebar a:hover,
+.sidebar a li a:hover {
+  color: white;
+  background-color: #434343;
+  border-radius: 5px;
+  display: block;
+}
+.open {
+  display: block;
+  transition: all 0.3s ease-in-out;
+}

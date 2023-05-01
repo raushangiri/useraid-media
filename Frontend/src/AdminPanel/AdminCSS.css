@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+}
+/* Small devices (sm) */
+@media (min-width: 250px) {
+  .AdminContainer {
+    padding-left: 0;
+  }
+}
+
+/* Medium devices (md) */
+@media (min-width: 768px) {
+  .AdminContainer {
+    padding-left: 250px;
+  }
+}
+
+/* Large devices (lg) */
+@media (min-width: 992px) {
+  .AdminContainer {
+    padding-left: 250px;
+  }
+}
+
+/* Extra large devices (xl) */
+@media (min-width: 1200px) {
+  .AdminContainer {
+    padding-left: 250px;
+  }
+}
+
+.AdminContainer {
+  padding-top: 100px;
+  background-color: #232b3e;
+  color: #78a2b4;
+  min-height: 100vh;
+  max-height: 100%;
+  right: 0;
+  bottom: 0;
+  transition: all 0.3s ease-in-out;
+  font-size: 10rem !important;
+}
+.metalic-color {
+  background-color: #181323;
+}
+.FormErr {
+  color: red;
+  font-weight: 600;
+}
+.activeTag {
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  background-color: rgb(7, 140, 7);
+  color: white;
+  font-weight: 500;
+}
+.inactiveTag {
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  background-color: rgb(172, 25, 17);
+  color: white;
+  font-weight: 500;
+}
+
+.DashIconBox {
+  color: rgb(179, 179, 179);
+  font-size: 2rem;
+  text-decoration: none;
+  transition: all 0.1s ease-in-out;
+}
+.DashIconBox:hover > .DashIcon .DashIconText {
+  color: rgb(255, 255, 255);
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+.DashIcon {
+  color: rgb(208, 206, 206);
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+.DashIconText {
+  color: rgb(208, 206, 206);
+  font-size: 2rem;
+  text-decoration: none;
+}
