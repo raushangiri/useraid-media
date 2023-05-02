@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: '*',
+  origin: '*.onrender.com',
   credentials: true,
 }));
 // router page required here
