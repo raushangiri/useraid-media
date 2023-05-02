@@ -15,7 +15,7 @@ app.use(cookieParser());
 //   credentials: true,
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // }
-
+ 
 // app.use(cors(corsOptions));
 // Set CORS headers for all routes defined in the auth router
 app.use((req, res, next) => {
