@@ -879,6 +879,7 @@ router.get("/level2ref", async (req, res) => {
 //////////////////////////////////////////////////Page Authentication//////////////////////////////
 //////Dashbord authentication///////////
 router.get("/dashboard", authentication, (req, res) => {
+  console.log(req.headers);
   res.send(req.rootUser);
 });
 //////Profile authentication///////////
