@@ -10,13 +10,13 @@ const cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(cookieParser());
-const corsOptions = {
-  origin: "https://6451506fbd62bf000750ed70--lovely-crostata-57bb72.netlify.app",
-  credentials: true,
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+// const corsOptions = {
+//   origin: "https://6451506fbd62bf000750ed70--lovely-crostata-57bb72.netlify.app",
+//   credentials: true,
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 // Set CORS headers for all routes defined in the auth router
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://64515f131b24690008bc42d8--lovely-crostata-57bb72.netlify.app');
