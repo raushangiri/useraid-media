@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: '*.onrender.com,*.netlify.app',
+  origin: '*.netlify.app',
   credentials: true,
 }));
 // router page required here
