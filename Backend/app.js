@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'https://64514418fd62d40008c91599--lovely-crostata-57bb72.netlify.app',
+  origin: '*',
   credentials: true,
 }));
 // router page required here
