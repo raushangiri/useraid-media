@@ -11,7 +11,10 @@ const cookieParser = require("cookie-parser");
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://64514418fd62d40008c91599--lovely-crostata-57bb72.netlify.app',
+  credentials: true,
+}));
 // router page required here
 app.use(require("./router/auth"));
 
