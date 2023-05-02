@@ -10,11 +10,16 @@ const cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(cookieParser());
+const corsOptions = {
+  origin: "https://6451506fbd62bf000750ed70--lovely-crostata-57bb72.netlify.app",
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
-app.use(cors({
-  origin: 'netlify.app',
-  credentials: true,
-}));
+app.use(cors(corsOptions));
+// app.use(cors({
+//   origin: 'netlify.app',
+//   credentials: true,
+// }));
 // router page required here
 app.use(require("./router/auth"));
 
