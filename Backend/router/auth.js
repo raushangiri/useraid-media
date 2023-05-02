@@ -762,7 +762,7 @@ router.post("/login2", async (req, res) => {
 
   res.cookie("jwtoken", token, { httpOnly: true });
 
-  res.status(200).json({ message: "Logged in successfully" });
+res.status(200).json({ message: "Logged in successfully", jwtToken: token });
 });
 
 //////////////////////////////////////////////////////
