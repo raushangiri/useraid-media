@@ -10,6 +10,10 @@ const cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: '*'
+}));
+
 // const corsOptions = {
 //   origin: "https://6451506fbd62bf000750ed70--lovely-crostata-57bb72.netlify.app",
 //   credentials: true,
@@ -18,12 +22,12 @@ app.use(cookieParser());
  
 // app.use(cors(corsOptions));
 // Set CORS headers for all routes defined in the auth router
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://64515f131b24690008bc42d8--lovely-crostata-57bb72.netlify.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', 'https://64515f131b24690008bc42d8--lovely-crostata-57bb72.netlify.app');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
 // app.use(cors({
 //   origin: 'netlify.app',
 //   credentials: true,
