@@ -17,7 +17,13 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
-
+// Set CORS headers for all routes defined in the auth router
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://64515f131b24690008bc42d8--lovely-crostata-57bb72.netlify.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 // app.use(cors({
 //   origin: 'netlify.app',
 //   credentials: true,
