@@ -218,7 +218,7 @@ router.get("/update-tasks/:customer_id", async (req, res) => {
 });
 
 ///////////////Auto assign task api///////////////////////
-cron.schedule("17 13 * * *", async (req, res) => {
+cron.schedule("50 08 * * *", async (req, res) => {
   try {
     try {
       // Fetch all customer IDs from the User collection
@@ -250,7 +250,6 @@ cron.schedule("17 13 * * *", async (req, res) => {
 
       // Flatten the array of assigned tasks
       const flattenedAssignedTasks = assignedTasks.flat();
-      console.log(flattenedAssignedTasks, "flattenedAssignedTasks");
       // Save the assigned tasks to the assignedtask collection
       await assignedtask.insertMany(flattenedAssignedTasks);
 
@@ -332,7 +331,6 @@ router.post("/assign-tasks", async (req, res) => {
 
     // Flatten the array of assigned tasks
     const flattenedAssignedTasks = assignedTasks.flat();
-    console.log(flattenedAssignedTasks, "flattenedAssignedTasks");
     // Save the assigned tasks to the assignedtask collection
     await assignedtask.insertMany(flattenedAssignedTasks);
 
@@ -342,51 +340,50 @@ router.post("/assign-tasks", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-cron.schedule("45 11 * * *", async () => {
-  try {
-    try {
-      // Fetch all customer IDs from the User collection
-      const customers = await User.find({}, "customer_id");
-      const customerIds = customers.map((customer) => customer.customer_id);
-      console.log(customerIds, "customerIds");
+// cron.schedule("45 11 * * *", async () => {
+//   try {
+//     try {
+//       // Fetch all customer IDs from the User collection
+//       const customers = await User.find({}, "customer_id");
+//       const customerIds = customers.map((customer) => customer.customer_id);
 
-      // Assign 10 random tasks from the taskdata collection to each customer
-      const assignedTasks = await Promise.all(
-        customerIds.map(async (customerId) => {
-          try {
-            const tasks = await taskdata.aggregate([{ $sample: { size: 10 } }]);
-            // Add the customer ID to each task object
-            const assignedTasks = tasks.map(async (task) => {
-              return {
-                customer_id: customerId,
-                videoUrl: task.videoUrl,
-                video_id: task.video_id,
-              };
-            });
-            return await Promise.all(assignedTasks);
-          } catch (err) {
-            console.error(err);
-          }
-        })
-      );
+//       // Assign 10 random tasks from the taskdata collection to each customer
+//       const assignedTasks = await Promise.all(
+//         customerIds.map(async (customerId) => {
+//           try {
+//             const tasks = await taskdata.aggregate([{ $sample: { size: 10 } }]);
+//             // Add the customer ID to each task object
+//             const assignedTasks = tasks.map(async (task) => {
+//               return {
+//                 customer_id: customerId,
+//                 videoUrl: task.videoUrl,
+//                 video_id: task.video_id,
+//               };
+//             });
+//             return await Promise.all(assignedTasks);
+//           } catch (err) {
+//             console.error(err);
+//           }
+//         })
+//       );
 
-      // Flatten the array of assigned tasks
-      const flattenedAssignedTasks = assignedTasks.flat();
-      console.log(flattenedAssignedTasks, "flattenedAssignedTasks");
-      // Save the assigned tasks to the assignedtask collection
-      await assignedtask.insertMany(flattenedAssignedTasks);
+//       // Flatten the array of assigned tasks
+//       const flattenedAssignedTasks = assignedTasks.flat();
+//       console.log(flattenedAssignedTasks, "flattenedAssignedTasks");
+//       // Save the assigned tasks to the assignedtask collection
+//       await assignedtask.insertMany(flattenedAssignedTasks);
 
-      res.status(200).send("Tasks assigned successfully");
-    } catch (error) {
-      console.error(error);
-      res.status(500).send(error.message);
-    }
+//       res.status(200).send("Tasks assigned successfully");
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).send(error.message);
+//     }
 
-    console.log("assigned task collection inserted");
-  } catch (err) {
-    console.error(err);
-  }
-});
+//     console.log("assigned task collection inserted");
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 
 router.get("/clear-logs", async (req, res) => {
   try {
@@ -398,7 +395,7 @@ router.get("/clear-logs", async (req, res) => {
   }
 });
 
-cron.schedule("48 02 * * *", async () => {
+cron.schedule("00 00 * * *", async () => {
   try {
     await assignedtask.deleteMany(); // clear the assignedtask collection
     console.log("assigned task collection cleared");
