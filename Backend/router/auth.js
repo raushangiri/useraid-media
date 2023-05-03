@@ -18,7 +18,21 @@ const mongoose = require("mongoose");
 const cron = require("node-cron");
 
 const authentication = require("../middleware/authentication");
+///////////////////////////////Support Hitory get api//////////////////
 
+router.get("/supportHistory/:customer_id", async (req, res) => {
+  const customer_id = parseInt(req.params.customer_id);
+  await SupporthistorySchema.find({ customer_id })
+    .then((result) => {
+      res.status(200).json({
+        supporthistory: result,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send(error);
+    });
+});
 /////////////////////////////support history Api/////////////////////////
 
 router.post("/supportHistory", async (req, res) => {
@@ -41,7 +55,6 @@ router.post("/supportHistory", async (req, res) => {
 
 router.put("/taskcompletedhistory/:id", async (req, res) => {
   try {
-    console.log("this function called");
     const taskId = req.params.id;
 
     // Update the status of the task to "completed"
