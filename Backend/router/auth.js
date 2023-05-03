@@ -9,6 +9,8 @@ const completedtaskdata = require("../modal/completedtaskSchema");
 const assignedtask = require("../modal/assignedtaskSchema");
 const WalletSchema = require("../modal/walletSchema");
 const TaskhistorySchema = require("../modal/taskhistorySchema");
+const SupporthistorySchema = require("../modal/supporthistorySchema");
+
 const bcrypt = require("bcrypt");
 
 const mongoose = require("mongoose");
@@ -16,6 +18,24 @@ const mongoose = require("mongoose");
 const cron = require("node-cron");
 
 const authentication = require("../middleware/authentication");
+
+/////////////////////////////support history Api/////////////////////////
+
+router.post("/supportHistory", async (req, res) => {
+  const { customer_id, Subject, status, reply } = req.body;
+  try {
+    const resolvedsupport = new SupporthistorySchema({
+      customer_id,
+      Subject,
+      status,
+      reply,
+    });
+    await resolvedsupport.save();
+    res.status(200).json({ message: "Enqury resolved" });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 ////////////////////task completed update,check all task completed,then remove from assign task then create task history/////////
 
