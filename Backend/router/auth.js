@@ -218,7 +218,7 @@ router.get("/update-tasks/:customer_id", async (req, res) => {
 });
 
 ///////////////Auto assign task api///////////////////////
-cron.schedule("50 08 * * *", async (req, res) => {
+cron.schedule("40 16 * * *", async (req, res) => {
   try {
     try {
       // Fetch all customer IDs from the User collection
@@ -395,7 +395,7 @@ router.get("/clear-logs", async (req, res) => {
   }
 });
 
-cron.schedule("00 00 * * *", async () => {
+cron.schedule("32 16 * * *", async () => {
   try {
     await assignedtask.deleteMany(); // clear the assignedtask collection
     console.log("assigned task collection cleared");
@@ -738,13 +738,13 @@ router.put("/Userqrcode/:id", async (req, res) => {
 
 ///////////////////Login 2/////////////////////////////
 router.post("/login2", async (req, res) => {
-  const { contact_number, password } = req.body;
+  const { customer_id, password } = req.body;
 
-  if (!contact_number || !password) {
+  if (!customer_id || !password) {
     return res.status(401).json({ error: "please fill all required field" });
   }
 
-  const user = await User.findOne({ contact_number });
+  const user = await User.findOne({ customer_id });
 
   if (!user) {
     return res.status(422).json({ error: "User Not Registered" });
