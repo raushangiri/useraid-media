@@ -395,7 +395,7 @@ router.get("/clear-logs", async (req, res) => {
   }
 });
 
-cron.schedule("32 16 * * *", async () => {
+cron.schedule("56 16 * * *", async () => {
   try {
     await assignedtask.deleteMany(); // clear the assignedtask collection
     console.log("assigned task collection cleared");
