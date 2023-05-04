@@ -38,7 +38,7 @@ router.post("/withdraw-request/:customer_id", async (req, res) => {
   const count = await User.countDocuments({ referrel_id: customer_id_int });
 
   if (!amount) {
-    return res.status(400).json({ error: "Missing required fields" });
+    return res.status(404).json({ error: "Missing required fields" });
   }
   if (requestType === "taskwallet") {
     if (amount < 200) {
