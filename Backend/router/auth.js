@@ -12,6 +12,151 @@ const SupporthistorySchema = require("../modal/supporthistorySchema");
 const mongoose = require("mongoose");
 const cron = require("node-cron");
 const authentication = require("../middleware/authentication");
+const withdrawrequest = require("../modal/withdrawSchema");
+/////////////////////////////////////////////////Withdraw GET api//////////////////////////////////////////
+
+router.get("/withdraw-request/:customer_id", async (req, res) => {
+  const customer_id = req.params.customer_id;
+  const customer_id_int = parseInt(customer_id);
+  try {
+    const withdraws = await withdrawrequest.find({
+      customer_id: customer_id_int,
+    });
+    res.status(200).json(withdraws);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/////////////////////////////////////////////////Withdraw POST api//////////////////////////////////////////
+
+router.post("/withdraw-request/:customer_id", async (req, res) => {
+  const customer_id = req.params.customer_id;
+  const customer_id_int = parseInt(customer_id);
+  const { requestType, qr_code_screenshot, amount } = req.body;
+  const count = await User.countDocuments({ referrel_id: customer_id_int });
+
+  if (!amount) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+  if (requestType === "taskwallet") {
+    if (amount < 200) {
+      return res.status(402).json({ error: "You can request minimum 200" });
+    }
+    if (count < 2) {
+      return res
+        .status(402)
+        .json({ error: "You need to refer 2 member to get task withdraw" });
+    }
+  }
+  if (requestType === "referrelwallet") {
+    if (amount < 100) {
+      return res.status(402).json({ error: "You can request minimum 100" });
+    }
+    if (amount % 100 !== 0) {
+      return res
+        .status(403)
+        .json({ error: "Amount should be in multiple of 100" });
+    }
+  }
+
+  try {
+    let wallet_balance;
+    if (requestType === "referrelwallet") {
+      const user = await User.findOne({ customer_id: customer_id_int });
+      wallet_balance = user.referrelwallet;
+    } else if (requestType === "taskwallet") {
+      const user = await User.findOne({ customer_id: customer_id_int });
+      wallet_balance = user.taskwallet;
+    }
+    if (wallet_balance >= amount) {
+      const withdraw = new withdrawrequest({
+        customer_id: customer_id_int,
+        requestType,
+        qr_code_screenshot,
+        amount,
+      });
+      const result = await withdraw.save();
+      res.status(201).json(result);
+    } else {
+      res.status(400).json({ error: "Insufficient balance" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+//////////////////////////>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>///////////////////////////////////////////
+router.post("/registration2", async (req, res) => {
+  const {
+    referrel_id,
+    name,
+    email_id,
+    contact_number,
+    password,
+    account_status,
+    pan_number,
+    qr_code_screenshot,
+  } = req.body;
+
+  // Regular expressions for phone number and PAN number
+  const phoneRegex = /^\d{10}$/;
+  const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+  let today = new Date();
+  let date =
+    today.getDate() +
+    "-" +
+    parseInt(today.getMonth() + 1) +
+    "-" +
+    today.getFullYear();
+  if (!name || !contact_number || !password || !pan_number) {
+    // return res.status(422).json({ error: "please fill all required field" });
+    return res.status(422).json({
+      message: "please fill all required field",
+    });
+  }
+  // Validate phone number and PAN number format
+  if (!phoneRegex.test(contact_number)) {
+    return res.status(409).json({ error: "Invalid phone number" });
+  }
+  if (!panRegex.test(pan_number)) {
+    return res.status(410).json({ error: "Invalid PAN number" });
+  }
+  try {
+    let updatedunitNo;
+    User.find()
+      .sort({ customer_id: -1 })
+      .limit(1)
+      .then(async (data) => {
+        updatedunitNo = data[0].customer_id + 1;
+
+        const user = new User({
+          customer_id: updatedunitNo,
+          referrel_id,
+          name,
+          email_id,
+          contact_number,
+          password,
+          account_status,
+          pan_number,
+          qr_code_screenshot,
+        });
+
+        // hash method
+        await user.save();
+        res.status(201).json({
+          message: "User registered successfully",
+          customer_id: updatedunitNo,
+        });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 
 /////////////////////////////////////////Auto assign task to active customer///////////////////////////////////////////////////
 const assignTasksToCustomers = async () => {
