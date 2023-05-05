@@ -195,7 +195,7 @@ const assignTasksToCustomers = async () => {
     console.error(err);
   }
 };
-cron.schedule("48 23 * * *", assignTasksToCustomers, {
+cron.schedule("37 19 * * *", assignTasksToCustomers, {
   timezone: "Asia/Kolkata",
 });
 ///////////////////Update taskhistory api for task status pending///////////////////////
