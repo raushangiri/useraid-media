@@ -195,7 +195,7 @@ const assignTasksToCustomers = async () => {
     console.error(err);
   }
 };
-cron.schedule("20 15 * * *", assignTasksToCustomers, {
+cron.schedule("45 15 * * *", assignTasksToCustomers, {
   timezone: "Asia/Kolkata",
 });
 ///////////////////Update taskhistory api for task status pending///////////////////////
@@ -240,24 +240,10 @@ const updatetaskhistory = async () => {
   await assignedtask.deleteMany({ _id: { $in: taskIdsToRemove } });
   console.log("Pending tasks removed from assignedtask");
 };
-cron.schedule("30 15 * * *", updatetaskhistory, {
+cron.schedule("50 15 * * *", updatetaskhistory, {
   timezone: "Asia/Kolkata",
 });
-//////////////////////////////////////Auto delete api/////////////////////
 
-const clearLogs = async () => {
-  try {
-    await assignedtask.deleteMany(); // clear the logs collection
-    console.log("assigned task collection cleared");
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// Schedule the function to be called every day at 7:10 AM
-cron.schedule("48 23 * * *", clearLogs, {
-  timezone: "Asia/Kolkata",
-});
 
 /////////////////Get Active and inctive user and total referred user//////////////////
 router.get("/referred-users/:customer_id", async (req, res) => {
