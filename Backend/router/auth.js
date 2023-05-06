@@ -195,20 +195,37 @@ const assignTasksToCustomers = async () => {
     console.error(err);
   }
 };
-cron.schedule("37 19 * * *", assignTasksToCustomers, {
+cron.schedule("20 15 * * *", assignTasksToCustomers, {
   timezone: "Asia/Kolkata",
 });
 ///////////////////Update taskhistory api for task status pending///////////////////////
-const updatetaskhistory = async () => {
-  console.log("History updated");
-  const assignedTasks = await assignedtask.find({ status: "Pending" }).exec();
-  const uniqueCustomerIDs = [
-    ...new Set(assignedTasks.map((task) => task.customer_id)),
-  ];
+// const updatetaskhistory = async () => {
+//   console.log("History updated");
+//   const assignedTasks = await assignedtask.find({ status: "Pending" }).exec();
+//   const uniqueCustomerIDs = [
+//     ...new Set(assignedTasks.map((task) => task.customer_id)),
+//   ];
 
+//   const tasksToInsert = uniqueCustomerIDs.map((customerID) => ({
+//     customer_id: customerID,
+//     status: assignedTasks
+//       .filter((task) => task.customer_id === customerID)
+//       .every((task) => task.status === "Completed")
+//       ? "Completed"
+//       : "Pending",
+//   }));
+
+//   await TaskhistorySchema.insertMany(tasksToInsert);
+//   console.log("Tasks History Updated successfully");
+// };
+const updatetaskhistory = async () => {
+  const pendingTasks = await assignedtask.find({ status: "Pending" }).exec();
+  const uniqueCustomerIDs = [
+    ...new Set(pendingTasks.map((task) => task.customer_id)),
+  ];
   const tasksToInsert = uniqueCustomerIDs.map((customerID) => ({
     customer_id: customerID,
-    status: assignedTasks
+    status: pendingTasks
       .filter((task) => task.customer_id === customerID)
       .every((task) => task.status === "Completed")
       ? "Completed"
@@ -217,8 +234,13 @@ const updatetaskhistory = async () => {
 
   await TaskhistorySchema.insertMany(tasksToInsert);
   console.log("Tasks History Updated successfully");
+
+  // Remove pending tasks from assignedtask
+  const taskIdsToRemove = pendingTasks.map((task) => task._id);
+  await assignedtask.deleteMany({ _id: { $in: taskIdsToRemove } });
+  console.log("Pending tasks removed from assignedtask");
 };
-cron.schedule("48 23 * * *", updatetaskhistory, {
+cron.schedule("30 15 * * *", updatetaskhistory, {
   timezone: "Asia/Kolkata",
 });
 //////////////////////////////////////Auto delete api/////////////////////
