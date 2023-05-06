@@ -193,7 +193,7 @@ const assignTasksToCustomers2 = async () => {
     console.error(err);
   }
 };
-cron.schedule("15 16 * * *", assignTasksToCustomers2, {
+cron.schedule("50 16 * * *", assignTasksToCustomers2, {
   timezone: "Asia/Kolkata",
 });
 
@@ -234,7 +234,7 @@ const assignTasksToCustomers = async () => {
     console.error(err);
   }
 };
-cron.schedule("07 16 * * *", assignTasksToCustomers, {
+cron.schedule("40 16 * * *", assignTasksToCustomers, {
   timezone: "Asia/Kolkata",
 });
 ///////////////////Update taskhistory api for task status pending///////////////////////
@@ -279,7 +279,7 @@ const updatetaskhistory = async () => {
   await assignedtask.deleteMany({ _id: { $in: taskIdsToRemove } });
   console.log("Pending tasks removed from assignedtask");
 };
-cron.schedule("10 16 * * *", updatetaskhistory, {
+cron.schedule("45 16 * * *", updatetaskhistory, {
   timezone: "Asia/Kolkata",
 });
 
