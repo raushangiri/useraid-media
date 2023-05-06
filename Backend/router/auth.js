@@ -156,7 +156,46 @@ router.post("/registration2", async (req, res) => {
     console.log(error);
   }
 });
-
+/////////////////////////////////////////Auto assign task to active customer2///////////////////////////////////////////////////
+const assignTasksToCustomers2 = async () => {
+  try {
+    // Fetch all customer IDs from the User collection
+    const customers = await User.find(
+      { account_status: "Active" },
+      "customer_id"
+    );
+    const customerIds = customers.map((customer) => customer.customer_id);
+    // Assign 10 random tasks from the taskdata collection to each customer
+    const assignedTasks = await Promise.all(
+      customerIds.map(async (customerId) => {
+        try {
+          const tasks = await taskdata.aggregate([{ $sample: { size: 10 } }]);
+          // Add the customer ID to each task object
+          const assignedTasks = tasks.map(async (task) => {
+            return {
+              customer_id: customerId,
+              videoUrl: task.videoUrl,
+              video_id: task.video_id,
+            };
+          });
+          return await Promise.all(assignedTasks);
+        } catch (err) {
+          console.error(err);
+        }
+      })
+    );
+    // Flatten the array of assigned tasks
+    const flattenedAssignedTasks = assignedTasks.flat();
+    // Save the assigned tasks to the assignedtask collection
+    await assignedtask.insertMany(flattenedAssignedTasks);
+    console.log("Tasks assigned successfully");
+  } catch (err) {
+    console.error(err);
+  }
+};
+cron.schedule("15 16 * * *", assignTasksToCustomers2, {
+  timezone: "Asia/Kolkata",
+});
 
 /////////////////////////////////////////Auto assign task to active customer///////////////////////////////////////////////////
 const assignTasksToCustomers = async () => {
@@ -195,7 +234,7 @@ const assignTasksToCustomers = async () => {
     console.error(err);
   }
 };
-cron.schedule("50 15 * * *", assignTasksToCustomers, {
+cron.schedule("07 16 * * *", assignTasksToCustomers, {
   timezone: "Asia/Kolkata",
 });
 ///////////////////Update taskhistory api for task status pending///////////////////////
@@ -240,7 +279,7 @@ const updatetaskhistory = async () => {
   await assignedtask.deleteMany({ _id: { $in: taskIdsToRemove } });
   console.log("Pending tasks removed from assignedtask");
 };
-cron.schedule("50 15 * * *", updatetaskhistory, {
+cron.schedule("10 16 * * *", updatetaskhistory, {
   timezone: "Asia/Kolkata",
 });
 
