@@ -13,6 +13,257 @@ const mongoose = require("mongoose");
 const cron = require("node-cron");
 const authentication = require("../middleware/authentication");
 const withdrawrequest = require("../modal/withdrawSchema");
+const AdminSchema = require("../modal/adminSchema");
+
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const mongoose = require("mongoose");
+const cron = require("node-cron");
+const authentication = require("../middleware/authentication");
+
+
+//////////////////////////////////////////Admin API/////////////////////////////////
+router.post("/createadmin", async (req, res) => {
+  const {
+    name,
+    email_id,
+    qr_code_screenshot,
+    taskwithdraw,
+    referrelwithdraw,
+    Totalreceivedpayment,
+    password,
+  } = req.body;
+  try {
+    const admincreate = new AdminSchema({
+      name,
+      email_id,
+      qr_code_screenshot,
+      taskwithdraw,
+      referrelwithdraw,
+      Totalreceivedpayment,
+      password,
+    });
+    const createdadmin = await admincreate.save();
+    res.status(200).json({ createdadmin });
+  } catch (error) {
+    console.log(error);
+  }
+});
+//////////////////////////////////////////Get Admin API/////////////////////////////////
+router.get("/getadmin", async (req, res) => {
+  const customer_id = "AM0001001";
+  try {
+    const admindata = await AdminSchema.findOne({ customer_id });
+    res.status(200).json(admindata);
+  } catch (error) {
+    console.log(error);
+  }
+});
+//////////////////////////////////////////Get total active users for Admin API/////////////////////////////////
+router.get("/activependingusers", async (req, res) => {
+  try {
+    const activeusers = await User.find({ account_status: "Active" }).count();
+    const inactiveusers = await User.find({
+      account_status: "Inactive",
+    }).count();
+    const taskwithdrawrequest = await withdrawrequest
+      .find({
+        requestType: "taskwallet",
+        status: "Pending",
+      })
+      .count();
+    const referwithdrawrequest = await withdrawrequest
+      .find({
+        requestType: "referrelwallet",
+        status: "Pending",
+      })
+      .count();
+    res.status(200).json({
+      activeusers,
+      inactiveusers,
+      taskwithdrawrequest,
+      referwithdrawrequest,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+////////////////////////////////////////// Admin task/refer payment API/////////////////////////////////
+router.put("/taskwithdrawrequest/:customer_id", async (req, res) => {
+  const customer_id = req.params.customer_id;
+  const customer_id_int = parseInt(customer_id);
+  const { amount, id } = req.body;
+  try {
+    let wallet_balance;
+    const user = await User.findOne({ customer_id: customer_id_int });
+    wallet_balance = user.taskwallet;
+    // Update User schema taskwallet
+    const updatedUser = await User.findOneAndUpdate(
+      { customer_id: customer_id_int },
+      { $inc: { taskwallet: -amount, Totalwallet: -amount } },
+      { new: true }
+    );
+    await withdrawrequest.findByIdAndUpdate(
+      id,
+      { status: "Approved" },
+      { new: true }
+    );
+    // Update AdminSchema taskwithdraw
+    const admin = await AdminSchema.findOne({ customer_id: "AM0001001" });
+    const taskwithdraw = admin.taskwithdraw + amount;
+    await AdminSchema.updateOne(
+      { customer_id: "AM0001001" },
+      { $inc: { taskwithdraw: taskwithdraw } }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+////////////////////////////////////////// Admin -- get all refer withdraw API/////////////////////////////////
+router.get("/referwithdrawrequest", async (req, res) => {
+  try {
+    const Withdrawrequest = await withdrawrequest.find({
+      status: "Pending",
+      requestType: "referrelwallet",
+    });
+    res.status(200).json({ Withdrawrequest });
+  } catch (error) {
+    console.error(error);
+  }
+});
+////////////////////////////////////////// Admin -- get all task withdraw API/////////////////////////////////
+router.get("/taskwithdrawrequest", async (req, res) => {
+  try {
+    const Withdrawrequest = await withdrawrequest.find({
+      status: "Pending",
+      requestType: "taskwallet",
+    });
+    res.status(200).json({ Withdrawrequest });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+////////////////////////////////////////// Admin refer payment API/////////////////////////////////
+router.put("/referwithdrawrequest/:customer_id", async (req, res) => {
+  const customer_id = req.params.customer_id;
+  const customer_id_int = parseInt(customer_id);
+  const { amount, id, requestType } = req.body;
+  try {
+    // Update User schema taskwallet
+    let updatedUser;
+    if (requestType === "referrelwallet") {
+      updatedUser = await User.findOneAndUpdate(
+        { customer_id: customer_id_int },
+        { $inc: { referrelwallet: -amount, Totalwallet: -amount } },
+        { new: true }
+      );
+      await AdminSchema.findOneAndUpdate(
+        { customer_id: "AM0001001" },
+        { $inc: { referrelwithdraw: amount } }
+      );
+    } else if (requestType === "taskwallet") {
+      updatedUser = await User.findOneAndUpdate(
+        { customer_id: customer_id_int },
+        { $inc: { taskwallet: -amount, Totalwallet: -amount } },
+        { new: true }
+      );
+      await AdminSchema.findOneAndUpdate(
+        { customer_id: "AM0001001" },
+        { $inc: { taskwithdraw: amount } }
+      );
+    }
+
+    await withdrawrequest.findByIdAndUpdate(
+      id,
+      { status: "Approved" },
+      { new: true }
+    );
+    // Update AdminSchema taskwithdraw
+    // const admin = await AdminSchema.findOne({ customer_id: "AM0001001" });
+    // await AdminSchema.updateOne(
+    //   { customer_id: "AM0001001" },
+    //   { $inc: { referrelwithdraw: referrelwithdraw } }
+    // );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    // console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/////////////////////////////////////Get User's list who made payment///////////////////
+router.get("/receivedpayment", async (req, res) => {
+  try {
+    const admindata = await Dipositinfo.find({ account_status: "Inactive" });
+    res.status(200).json({ admindata });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+///////////////////////////////////////////Admin/////////////////////////////////////////////////////////////
+
+router.get("/inactive-users-with-qr-code", async (req, res) => {
+  try {
+    const inactiveUsers = await User.find({
+      account_status: "Inactive",
+      qr_code_screenshot: { $ne: null },
+    });
+    res.status(200).json(inactiveUsers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+///////////////////////////Admin login///////////////////////////////////////
+
+router.post("/adminlogin", async (req, res) => {
+  try {
+    // Destructure the request body
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(401)
+        .json({ error: "Please fill in all required fields." });
+    }
+
+    // Find the user by customer_id
+    const user = await AdminSchema.findOne({ email_id: email });
+
+    // If the user is not found, return an error
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Check if the password matches
+    const isMatch = password === user.password;
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials." });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
+
+    // Return the token in a JSON response
+    res.cookie("jwtoken", token, { httpOnly: true });
+    return res.status(200).json({ token });
+  } catch (error) {
+    // Handle any errors that occur during execution
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred." });
+  }
+});
+
+
+
+
+
 /////////////////////////////////////////////////Withdraw GET api//////////////////////////////////////////
 
 router.get("/withdraw-request/:customer_id", async (req, res) => {
