@@ -5,7 +5,7 @@ const withdrawSchema = new mongoose.Schema({
   requestType: { type: String, required: true },
   qr_code_screenshot: {},
   amount: { type: Number, required: Number },
-    status: { type: String, default: "Pending" },
+  status: { type: String, default: "Pending" },
   createdAt: {
     type: Date,
     default: Date.now,

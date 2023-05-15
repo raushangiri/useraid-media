@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const dipositSchema = new mongoose.Schema({
   customer_id: {},
   transaction_id: { type: String, required: true },
+  qr_code_screenshot: {},
   account_status: {
     default: "Inactive",
     type: String,
   },
-  qr_code_screenshot: {},
   createdAt: {
     type: Date,
     default: Date.now,
